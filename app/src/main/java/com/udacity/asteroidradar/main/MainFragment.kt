@@ -2,28 +2,32 @@ package com.udacity.asteroidradar.main
 
 import android.os.Bundle
 import android.view.*
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.databinding.DataBindingUtil
 import com.udacity.asteroidradar.R
+import com.udacity.asteroidradar.base.BaseFragment
 import com.udacity.asteroidradar.databinding.FragmentMainBinding
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class MainFragment : Fragment() {
+class MainFragment : BaseFragment() {
+    override val _viewModel: MainViewModel by viewModel()
+    private lateinit var binding: FragmentMainBinding
 
-    private val viewModel: MainViewModel by lazy {
-        ViewModelProvider(this).get(MainViewModel::class.java)
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        val binding = FragmentMainBinding.inflate(inflater)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_main, container, false)
         binding.lifecycleOwner = this
 
-        binding.viewModel = viewModel
+        binding.viewModel = _viewModel
+
 
         setHasOptionsMenu(true)
 
         return binding.root
     }
+
+
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.main_overflow_menu, menu)
