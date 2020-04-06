@@ -34,6 +34,7 @@ ext {
     koinVersion = '2.0.1'
     navigationVersion = '2.2.0'
     work ='2.3.4'
+    androidXAnnotations = '1.0.1'
 }
 
 task clean(type: Delete) {

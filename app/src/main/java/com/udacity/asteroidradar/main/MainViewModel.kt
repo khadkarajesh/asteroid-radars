@@ -21,7 +21,7 @@ class MainViewModel(
     private val api: AsteroidApiService
 ) : BaseViewModel(app) {
     private val tag = MainViewModel::class.java.simpleName
-    private val asteroids = MutableLiveData<List<AsteroidDataItem>>()
+    val asteroids = MutableLiveData<List<AsteroidDataItem>>()
     var postUrl: MutableLiveData<String> = MutableLiveData("")
 
 
