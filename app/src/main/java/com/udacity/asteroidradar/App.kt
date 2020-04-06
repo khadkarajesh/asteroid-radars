@@ -4,6 +4,8 @@ import android.app.Application
 import com.udacity.asteroidradar.data.AsteroidDataSource
 import com.udacity.asteroidradar.data.local.AsteroidsLocalRepository
 import com.udacity.asteroidradar.data.local.LocalDB
+import com.udacity.asteroidradar.data.remote.Api
+import com.udacity.asteroidradar.data.remote.AsteroidApiService
 import com.udacity.asteroidradar.main.MainViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -16,12 +18,13 @@ class App : Application() {
         super.onCreate()
         val myModule = module {
             viewModel {
-                MainViewModel(get(), get() as AsteroidDataSource)
+                MainViewModel(get(), get() as AsteroidDataSource, get() as AsteroidApiService)
             }
 
 
             single { AsteroidsLocalRepository(get()) as AsteroidDataSource }
             single { LocalDB.createAsteroidDao(this@App) }
+            single { Api.retrofitService }
         }
 
         startKoin {

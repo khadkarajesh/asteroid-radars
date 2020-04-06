@@ -1,20 +1,42 @@
 package com.udacity.asteroidradar.main
 
 import android.app.Application
+import android.util.Log
+import android.widget.ImageView
+import androidx.databinding.BindingAdapter
 import androidx.lifecycle.MutableLiveData
-import com.udacity.asteroidradar.base.BaseViewModel
 import androidx.lifecycle.viewModelScope
+import com.squareup.picasso.Picasso
+import com.udacity.asteroidradar.base.BaseViewModel
 import com.udacity.asteroidradar.data.AsteroidDataSource
 import com.udacity.asteroidradar.data.dto.AsteroidDTO
 import com.udacity.asteroidradar.data.dto.Result
+import com.udacity.asteroidradar.data.remote.AsteroidApiService
 import kotlinx.coroutines.launch
+
 
 class MainViewModel(
     app: Application,
-    private val dataSource: AsteroidDataSource
+    private val dataSource: AsteroidDataSource,
+    private val api: AsteroidApiService
 ) : BaseViewModel(app) {
-
+    private val tag = MainViewModel::class.java.simpleName
     private val asteroids = MutableLiveData<List<AsteroidDataItem>>()
+    var postUrl: MutableLiveData<String> = MutableLiveData("")
+
+
+    fun getPictureOfDay() {
+        viewModelScope.launch {
+            val pictureOfDayDeferred = api.getPictureOfDayAsync()
+            try {
+                var result = pictureOfDayDeferred.await()
+                postUrl.value = result.url
+            } catch (e: Exception) {
+                Log.d(tag, e.localizedMessage)
+            }
+        }
+    }
+
 
     fun getAsteroids() {
         showLoading.value = true
@@ -48,5 +70,12 @@ class MainViewModel(
 
     private fun invalidateShowNoData() {
         showNoData.value = asteroids.value == null || asteroids.value!!.isEmpty()
+    }
+}
+
+@BindingAdapter("android:src")
+fun loadImage(view: ImageView, imageUrl: String?) {
+    if (!imageUrl.isNullOrEmpty()) {
+        Picasso.get().load(imageUrl).into(view)
     }
 }
