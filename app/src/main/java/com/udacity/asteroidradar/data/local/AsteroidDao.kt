@@ -9,8 +9,8 @@ import com.udacity.asteroidradar.data.dto.AsteroidDTO
 
 @Dao
 interface AsteroidDao {
-    @Query("SELECT * FROM asteroids ORDER BY date(close_approach_date)")
-    suspend fun getAsteroids(): List<AsteroidDTO>
+    @Query("SELECT * FROM asteroids where close_approach_date >= :date ORDER BY date(close_approach_date)")
+    suspend fun getAsteroidsTodayOnWards(date: String): List<AsteroidDTO>
 
     @Query("SELECT * FROM asteroids where close_approach_date < :date")
     suspend fun getPastAsteroids(date: String): List<AsteroidDTO>

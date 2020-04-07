@@ -9,6 +9,7 @@ import com.udacity.asteroidradar.data.AsteroidDataSource
 import com.udacity.asteroidradar.data.dto.AsteroidDTO
 import com.udacity.asteroidradar.data.dto.Result
 import com.udacity.asteroidradar.data.remote.AsteroidApiService
+import com.udacity.asteroidradar.utils.today
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -32,7 +33,7 @@ class AsteroidsLocalRepository(
                         it
                     )
                 }
-            Result.Success(asteroidDao.getAsteroids())
+            Result.Success(asteroidDao.getAsteroidsTodayOnWards(today()))
         } catch (ex: Exception) {
             Result.Error(ex.localizedMessage)
         }
@@ -68,8 +69,7 @@ class AsteroidsLocalRepository(
     }
 
     private suspend fun getRemoteAsteroids(): List<Asteroid> {
-        val today = SimpleDateFormat(API_QUERY_DATE_FORMAT).format(Date())
-        val responseBody = service.getAsteroidsAsync(BuildConfig.API_KEY, today).await()
+        val responseBody = service.getAsteroidsAsync(BuildConfig.API_KEY, today()).await()
         val jsonObject = JSONObject(responseBody.string())
         return parseAsteroidsJsonResult(jsonObject)
     }
