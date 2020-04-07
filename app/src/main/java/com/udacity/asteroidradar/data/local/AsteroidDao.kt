@@ -12,7 +12,10 @@ interface AsteroidDao {
     @Query("SELECT * FROM asteroids")
     suspend fun getAsteroids(): List<AsteroidDTO>
 
-    @Query("SELECT * FROM asteroids where entry_id = :asteroidId")
+    @Query("SELECT COUNT(*) FROM asteroids")
+    suspend fun getCount(): Int
+
+    @Query("SELECT * FROM asteroids where id = :asteroidId")
     suspend fun getAsteroidById(asteroidId: String): AsteroidDTO?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

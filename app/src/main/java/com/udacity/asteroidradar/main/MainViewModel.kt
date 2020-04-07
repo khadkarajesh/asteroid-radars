@@ -7,11 +7,13 @@ import androidx.databinding.BindingAdapter
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.squareup.picasso.Picasso
+import com.udacity.asteroidradar.BuildConfig
 import com.udacity.asteroidradar.base.BaseViewModel
 import com.udacity.asteroidradar.data.AsteroidDataSource
 import com.udacity.asteroidradar.data.dto.AsteroidDTO
 import com.udacity.asteroidradar.data.dto.Result
 import com.udacity.asteroidradar.data.remote.AsteroidApiService
+import com.udacity.asteroidradar.domain.AsteroidDataItem
 import kotlinx.coroutines.launch
 
 
@@ -27,7 +29,7 @@ class MainViewModel(
 
     fun getPictureOfDay() {
         viewModelScope.launch {
-            val pictureOfDayDeferred = api.getPictureOfDayAsync()
+            val pictureOfDayDeferred = api.getPictureOfDayAsync(BuildConfig.API_KEY)
             try {
                 var result = pictureOfDayDeferred.await()
                 postUrl.value = result.url

@@ -22,7 +22,7 @@ class App : Application() {
             }
 
 
-            single { AsteroidsLocalRepository(get()) as AsteroidDataSource }
+            single { AsteroidsLocalRepository(get(), get()) as AsteroidDataSource }
             single { LocalDB.createAsteroidDao(this@App) }
             single { Api.retrofitService }
         }

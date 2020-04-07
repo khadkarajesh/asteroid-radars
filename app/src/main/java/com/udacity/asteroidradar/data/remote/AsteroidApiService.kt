@@ -3,16 +3,16 @@ package com.udacity.asteroidradar.data.remote
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import com.udacity.asteroidradar.Constants.BASE_URL
 import kotlinx.coroutines.Deferred
-import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import okhttp3.Response
+import okhttp3.ResponseBody
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
+import retrofit2.http.Query
 
-private const val BASE_URL = "https://api.nasa.gov/neo/rest/v1/"
 
 private val moshi = Moshi
     .Builder()
@@ -39,8 +39,14 @@ private val retrofit = Retrofit
     .build()
 
 interface AsteroidApiService {
-    @GET("https://api.nasa.gov/planetary/apod?api_key=8NRiPaifF1kSclmlasVmXaifvqJrAUOAbG4EMFaA")
-    fun getPictureOfDayAsync(): Deferred<PictureOfDay>
+    @GET("planetary/apod")
+    fun getPictureOfDayAsync(@Query("api_key") apiKey: String): Deferred<PictureOfDay>
+
+    @GET("neo/rest/v1/feed")
+    fun getAsteroidsAsync(
+        @Query("api_key") apiKey: String,
+        @Query("start_date") startDate: String
+    ): Deferred<ResponseBody>
 }
 
 object Api {

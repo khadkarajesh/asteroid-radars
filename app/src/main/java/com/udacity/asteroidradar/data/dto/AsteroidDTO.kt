@@ -3,7 +3,6 @@ package com.udacity.asteroidradar.data.dto
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.util.*
 
 @Entity(tableName = "asteroids")
 data class AsteroidDTO(
@@ -29,6 +28,6 @@ data class AsteroidDTO(
     var distanceFromEarth: Double,
 
     @PrimaryKey
-    @ColumnInfo(name = "entry_id")
-    val id: String = UUID.randomUUID().toString()
+    @ColumnInfo(name = "id")
+    val id: Long
 )

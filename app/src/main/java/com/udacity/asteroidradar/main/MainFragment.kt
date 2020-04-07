@@ -34,6 +34,7 @@ class MainFragment : BaseFragment() {
     override fun onResume() {
         super.onResume()
         _viewModel.getPictureOfDay()
+        _viewModel.getAsteroids()
     }
 
 

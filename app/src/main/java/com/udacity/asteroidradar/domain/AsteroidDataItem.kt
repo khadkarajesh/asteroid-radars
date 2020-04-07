@@ -1,9 +1,7 @@
-package com.udacity.asteroidradar.main
-
-import java.util.*
+package com.udacity.asteroidradar.domain
 
 data class AsteroidDataItem(
-    val id: String = UUID.randomUUID().toString(),
+    val id: Long,
     val codename: String,
     val closeApproachDate: String,
     val absoluteMagnitude: Double,
