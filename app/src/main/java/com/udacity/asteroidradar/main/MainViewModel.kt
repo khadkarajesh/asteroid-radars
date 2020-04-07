@@ -1,7 +1,6 @@
 package com.udacity.asteroidradar.main
 
 import android.app.Application
-import android.content.Context
 import android.util.Log
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
@@ -10,13 +9,13 @@ import androidx.lifecycle.viewModelScope
 import androidx.work.*
 import com.squareup.picasso.Picasso
 import com.udacity.asteroidradar.BuildConfig
-import com.udacity.asteroidradar.Constants
 import com.udacity.asteroidradar.base.BaseViewModel
 import com.udacity.asteroidradar.data.AsteroidDataSource
 import com.udacity.asteroidradar.data.dto.AsteroidDTO
 import com.udacity.asteroidradar.data.dto.Result
 import com.udacity.asteroidradar.data.manager.AppWorker
 import com.udacity.asteroidradar.data.remote.AsteroidApiService
+import com.udacity.asteroidradar.data.remote.PictureOfDay
 import com.udacity.asteroidradar.domain.AsteroidDataItem
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
@@ -29,7 +28,7 @@ class MainViewModel(
 ) : BaseViewModel(app) {
     private val tag = MainViewModel::class.java.simpleName
     val asteroids = MutableLiveData<List<AsteroidDataItem>>()
-    var postUrl: MutableLiveData<String> = MutableLiveData("")
+    var pictureOfDay: MutableLiveData<PictureOfDay> = MutableLiveData()
 
 
     fun getPictureOfDay() {
@@ -37,7 +36,7 @@ class MainViewModel(
             val pictureOfDayDeferred = api.getPictureOfDayAsync(BuildConfig.API_KEY)
             try {
                 var result = pictureOfDayDeferred.await()
-                postUrl.value = result.url
+                pictureOfDay.value = result
             } catch (e: Exception) {
                 Log.d(tag, e.localizedMessage)
             }

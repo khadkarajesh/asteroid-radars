@@ -29,7 +29,7 @@
                 android:layout_height="match_parent"
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"
-                android:src="@{viewModel.postUrl, default=@drawable/placeholder_picture_of_day}" />
+                android:src="@{viewModel.pictureOfDay.url, default=@drawable/placeholder_picture_of_day}" />
 
             <TextView
                 android:id="@+id/textView"
@@ -37,6 +37,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:background="#55010613"
+                android:contentDescription="@{viewModel.pictureOfDay.title, default=@string/image_of_the_day}"
                 android:padding="16dp"
                 android:text="@string/image_of_the_day"
                 android:textColor="@android:color/white"
