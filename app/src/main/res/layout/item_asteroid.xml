@@ -11,7 +11,7 @@
     </data>
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/reminderCardView"
+        android:id="@+id/asteroidCardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/padding_medium"
@@ -23,7 +23,7 @@
             android:background="@color/colorPrimary">
 
             <TextView
-                android:id="@+id/title"
+                android:id="@+id/codename"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/padding_small"
@@ -38,13 +38,13 @@
                 tools:text="Title" />
 
             <TextView
-                android:id="@+id/description"
+                android:id="@+id/closeApproachDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@{item.closeApproachDate}"
                 style="@style/AppDescription"
-                app:layout_constraintStart_toStartOf="@id/title"
-                app:layout_constraintTop_toBottomOf="@id/title"
+                app:layout_constraintStart_toStartOf="@id/codename"
+                app:layout_constraintTop_toBottomOf="@id/codename"
                 tools:text="Description" />
 
             <ImageView
