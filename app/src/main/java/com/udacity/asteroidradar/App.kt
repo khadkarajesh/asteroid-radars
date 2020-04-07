@@ -1,6 +1,7 @@
 package com.udacity.asteroidradar
 
 import android.app.Application
+import com.facebook.stetho.Stetho
 import com.udacity.asteroidradar.data.AsteroidDataSource
 import com.udacity.asteroidradar.data.local.AsteroidsLocalRepository
 import com.udacity.asteroidradar.data.local.LocalDB
@@ -16,6 +17,7 @@ import org.koin.dsl.module
 class App : Application() {
     override fun onCreate() {
         super.onCreate()
+        Stetho.initializeWithDefaults(this)
         val myModule = module {
             viewModel {
                 MainViewModel(get(), get() as AsteroidDataSource, get() as AsteroidApiService)
@@ -23,6 +25,7 @@ class App : Application() {
 
 
             single { AsteroidsLocalRepository(get(), get()) as AsteroidDataSource }
+            single { AsteroidsLocalRepository(get(), get()) }
             single { LocalDB.createAsteroidDao(this@App) }
             single { Api.retrofitService }
         }

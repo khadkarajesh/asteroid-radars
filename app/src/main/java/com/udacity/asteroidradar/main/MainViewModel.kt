@@ -7,10 +7,7 @@ import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import androidx.work.Constraints
-import androidx.work.NetworkType
-import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkManager
+import androidx.work.*
 import com.squareup.picasso.Picasso
 import com.udacity.asteroidradar.BuildConfig
 import com.udacity.asteroidradar.Constants
@@ -82,15 +79,21 @@ class MainViewModel(
         showNoData.value = asteroids.value == null || asteroids.value!!.isEmpty()
     }
 
-    private fun startJob() {
+    fun startJob() {
         val constraints = Constraints.Builder()
             .setRequiresCharging(true)
             .setRequiredNetworkType(NetworkType.CONNECTED).build()
         val request =
-            PeriodicWorkRequestBuilder<AppWorker>(1, TimeUnit.DAYS)
+            PeriodicWorkRequestBuilder<AppWorker>(1, TimeUnit.SECONDS)
                 .setConstraints(constraints)
+                .setBackoffCriteria(
+                    BackoffPolicy.LINEAR,
+                    PeriodicWorkRequest.MIN_BACKOFF_MILLIS,
+                    TimeUnit.MILLISECONDS
+                )
                 .build()
-        WorkManager.getInstance().enqueue(request)
+        WorkManager.getInstance()
+            .enqueueUniquePeriodicWork("DataSync", ExistingPeriodicWorkPolicy.KEEP, request)
     }
 }
 

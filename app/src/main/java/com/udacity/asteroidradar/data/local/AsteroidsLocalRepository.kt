@@ -1,5 +1,6 @@
 package com.udacity.asteroidradar.data.local
 
+import android.util.Log
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.BuildConfig
 import com.udacity.asteroidradar.Constants.API_QUERY_DATE_FORMAT
@@ -22,19 +23,26 @@ class AsteroidsLocalRepository(
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : AsteroidDataSource {
     private val empty = 0
+    private val tag = AsteroidsLocalRepository::class.java.simpleName
     override suspend fun getAsteroids(): Result<List<AsteroidDTO>> = withContext(ioDispatcher) {
         return@withContext try {
-//            val recordCount = asteroidDao.getCount()
-//            if (recordCount == empty) {
-//                toDomainModel(getRemoteAsteroids()).forEach { asteroidDao.saveAsteroid(it) }
-//            }
+            if (isFirstLunch()) toDomainModel(getRemoteAsteroids())
+                .forEach {
+                    asteroidDao.saveAsteroid(
+                        it
+                    )
+                }
             Result.Success(asteroidDao.getAsteroids())
         } catch (ex: Exception) {
             Result.Error(ex.localizedMessage)
         }
     }
 
-    private fun AsteroidsLocalRepository.toDomainModel(asteroids: List<Asteroid>): List<AsteroidDTO> {
+    private suspend fun isFirstLunch(): Boolean {
+        return asteroidDao.getCount() == empty
+    }
+
+    private fun toDomainModel(asteroids: List<Asteroid>): List<AsteroidDTO> {
         val dtoList = ArrayList<AsteroidDTO>()
         dtoList.addAll(asteroids.map { asteroid ->
             AsteroidDTO(
@@ -51,13 +59,16 @@ class AsteroidsLocalRepository(
         return dtoList
     }
 
+    suspend fun getRecordCount(): Int = withContext(ioDispatcher) {
+        return@withContext asteroidDao.getCount()
+    }
+
     suspend fun refreshData() {
         toDomainModel(getRemoteAsteroids()).forEach { asteroidDao.saveAsteroid(it) }
     }
 
     private suspend fun getRemoteAsteroids(): List<Asteroid> {
         val today = SimpleDateFormat(API_QUERY_DATE_FORMAT).format(Date())
-
         val responseBody = service.getAsteroidsAsync(BuildConfig.API_KEY, today).await()
         val jsonObject = JSONObject(responseBody.string())
         return parseAsteroidsJsonResult(jsonObject)
@@ -85,9 +96,13 @@ class AsteroidsLocalRepository(
     }
 
     override suspend fun deletePastAsteroids(date: String) {
-        val asteroids = asteroidDao.getPastAsteroids("2020-04-12")
-        asteroids.forEach {
-            asteroidDao.deleteById(it.id)
+        try {
+            val asteroids = asteroidDao.getPastAsteroids(date)
+            asteroids.forEach {
+                asteroidDao.deleteById(it.id)
+            }
+        } catch (e: java.lang.Exception) {
+            Log.d(tag, "database exception ${e.localizedMessage}")
         }
     }
 
