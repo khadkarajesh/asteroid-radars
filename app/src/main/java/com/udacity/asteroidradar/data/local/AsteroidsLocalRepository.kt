@@ -24,27 +24,35 @@ class AsteroidsLocalRepository(
     private val empty = 0
     override suspend fun getAsteroids(): Result<List<AsteroidDTO>> = withContext(ioDispatcher) {
         return@withContext try {
-            val recordCount = asteroidDao.getCount()
-            if (recordCount == empty) {
-                val dtoList = ArrayList<AsteroidDTO>()
-                dtoList.addAll(getRemoteAsteroids().map { asteroid ->
-                    AsteroidDTO(
-                        asteroid.codename,
-                        asteroid.closeApproachDate,
-                        asteroid.absoluteMagnitude,
-                        asteroid.estimatedDiameter,
-                        asteroid.isPotentiallyHazardous,
-                        asteroid.relativeVelocity,
-                        asteroid.distanceFromEarth,
-                        asteroid.id
-                    )
-                })
-                dtoList.forEach { asteroidDao.saveAsteroid(it) }
-            }
+//            val recordCount = asteroidDao.getCount()
+//            if (recordCount == empty) {
+//                toDomainModel(getRemoteAsteroids()).forEach { asteroidDao.saveAsteroid(it) }
+//            }
             Result.Success(asteroidDao.getAsteroids())
         } catch (ex: Exception) {
             Result.Error(ex.localizedMessage)
         }
+    }
+
+    private fun AsteroidsLocalRepository.toDomainModel(asteroids: List<Asteroid>): List<AsteroidDTO> {
+        val dtoList = ArrayList<AsteroidDTO>()
+        dtoList.addAll(asteroids.map { asteroid ->
+            AsteroidDTO(
+                asteroid.codename,
+                asteroid.closeApproachDate,
+                asteroid.absoluteMagnitude,
+                asteroid.estimatedDiameter,
+                asteroid.isPotentiallyHazardous,
+                asteroid.relativeVelocity,
+                asteroid.distanceFromEarth,
+                asteroid.id
+            )
+        })
+        return dtoList
+    }
+
+    suspend fun refreshData() {
+        toDomainModel(getRemoteAsteroids()).forEach { asteroidDao.saveAsteroid(it) }
     }
 
     private suspend fun getRemoteAsteroids(): List<Asteroid> {
@@ -74,6 +82,13 @@ class AsteroidsLocalRepository(
 
     override suspend fun deleteAllAsteroids() = withContext(ioDispatcher) {
         asteroidDao.deleteAllAsteroids()
+    }
+
+    override suspend fun deletePastAsteroids(date: String) {
+        val asteroids = asteroidDao.getPastAsteroids("2020-04-12")
+        asteroids.forEach {
+            asteroidDao.deleteById(it.id)
+        }
     }
 
 }

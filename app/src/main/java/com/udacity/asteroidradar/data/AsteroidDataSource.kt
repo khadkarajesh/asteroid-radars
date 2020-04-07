@@ -9,4 +9,5 @@ interface AsteroidDataSource {
     suspend fun saveAsteroid(asteroid: AsteroidDTO)
     suspend fun getAsteroid(id: String): Result<AsteroidDTO>
     suspend fun deleteAllAsteroids()
+    suspend fun deletePastAsteroids(date: String)
 }

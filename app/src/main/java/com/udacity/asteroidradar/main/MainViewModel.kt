@@ -1,24 +1,32 @@
 package com.udacity.asteroidradar.main
 
 import android.app.Application
+import android.content.Context
 import android.util.Log
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import androidx.work.Constraints
+import androidx.work.NetworkType
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import com.squareup.picasso.Picasso
 import com.udacity.asteroidradar.BuildConfig
+import com.udacity.asteroidradar.Constants
 import com.udacity.asteroidradar.base.BaseViewModel
 import com.udacity.asteroidradar.data.AsteroidDataSource
 import com.udacity.asteroidradar.data.dto.AsteroidDTO
 import com.udacity.asteroidradar.data.dto.Result
+import com.udacity.asteroidradar.data.manager.AppWorker
 import com.udacity.asteroidradar.data.remote.AsteroidApiService
 import com.udacity.asteroidradar.domain.AsteroidDataItem
 import kotlinx.coroutines.launch
+import java.util.concurrent.TimeUnit
 
 
 class MainViewModel(
-    app: Application,
+    private val app: Application,
     private val dataSource: AsteroidDataSource,
     private val api: AsteroidApiService
 ) : BaseViewModel(app) {
@@ -72,6 +80,17 @@ class MainViewModel(
 
     private fun invalidateShowNoData() {
         showNoData.value = asteroids.value == null || asteroids.value!!.isEmpty()
+    }
+
+    private fun startJob() {
+        val constraints = Constraints.Builder()
+            .setRequiresCharging(true)
+            .setRequiredNetworkType(NetworkType.CONNECTED).build()
+        val request =
+            PeriodicWorkRequestBuilder<AppWorker>(1, TimeUnit.DAYS)
+                .setConstraints(constraints)
+                .build()
+        WorkManager.getInstance().enqueue(request)
     }
 }
 
