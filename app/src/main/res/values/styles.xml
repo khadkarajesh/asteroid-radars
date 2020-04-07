@@ -16,7 +16,7 @@
     </style>
     <style name="AppDescription">
         <item name="android:textColor">@android:color/white</item>
-        <item name="android:textSize">@dimen/text_size_medium</item>
+        <item name="android:textSize">@dimen/text_size_normal</item>
     </style>
 
 </resources>

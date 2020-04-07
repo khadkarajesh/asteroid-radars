@@ -42,8 +42,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@{item.closeApproachDate}"
-                android:textColor="@android:color/white"
-                android:textSize="@dimen/text_size_small"
+                style="@style/AppDescription"
                 app:layout_constraintStart_toStartOf="@id/title"
                 app:layout_constraintTop_toBottomOf="@id/title"
                 tools:text="Description" />
