@@ -13,10 +13,11 @@
     <dimen name="banner_height">300dp</dimen>
 
     <dimen name="dimen_4x8">32dp</dimen>
-    <dimen name="dimen_4x4">16dp</dimen>
     <dimen name="dimen_4x2">8dp</dimen>
     <dimen name="dimen_4x6">24dp</dimen>
 
     <dimen name="dimen_8x8">64dp</dimen>
     <dimen name="dimen_4x0">0dp</dimen>
+    <dimen name="dimen_4x4">16dp</dimen>
+    <dimen name="dimen_4x1">4dp</dimen>
 </resources>
