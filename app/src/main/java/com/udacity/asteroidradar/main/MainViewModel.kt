@@ -83,7 +83,7 @@ class MainViewModel(
             .setRequiresCharging(true)
             .setRequiredNetworkType(NetworkType.CONNECTED).build()
         val request =
-            PeriodicWorkRequestBuilder<AppWorker>(1, TimeUnit.SECONDS)
+            PeriodicWorkRequestBuilder<AppWorker>(1, TimeUnit.DAYS)
                 .setConstraints(constraints)
                 .setBackoffCriteria(
                     BackoffPolicy.LINEAR,
