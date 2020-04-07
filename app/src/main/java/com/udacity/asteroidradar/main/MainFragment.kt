@@ -5,6 +5,7 @@ import android.view.*
 import androidx.databinding.DataBindingUtil
 import com.udacity.asteroidradar.R
 import com.udacity.asteroidradar.base.BaseFragment
+import com.udacity.asteroidradar.base.NavigationCommand
 import com.udacity.asteroidradar.databinding.FragmentMainBinding
 import com.udacity.asteroidradar.utils.setup
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -40,7 +41,13 @@ class MainFragment : BaseFragment() {
 
 
     private fun setupRecyclerView() {
-        val adapter = AsteroidsAdapter {}
+        val adapter = AsteroidsAdapter {
+            _viewModel.navigationCommand.postValue(
+                NavigationCommand.To(
+                    MainFragmentDirections.actionShowDetail(it)
+                )
+            )
+        }
         binding.asteroidRecycler.setup(adapter)
     }
 
