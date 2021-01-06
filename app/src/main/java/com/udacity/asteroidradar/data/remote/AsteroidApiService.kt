@@ -40,13 +40,13 @@ private val retrofit = Retrofit
 
 interface AsteroidApiService {
     @GET("planetary/apod")
-    fun getPictureOfDayAsync(@Query("api_key") apiKey: String): Deferred<PictureOfDay>
+    suspend fun getPictureOfDayAsync(@Query("api_key") apiKey: String): PictureOfDay
 
     @GET("neo/rest/v1/feed")
-    fun getAsteroidsAsync(
+    suspend fun getAsteroidsAsync(
         @Query("api_key") apiKey: String,
         @Query("start_date") startDate: String
-    ): Deferred<ResponseBody>
+    ): ResponseBody
 }
 
 object Api {

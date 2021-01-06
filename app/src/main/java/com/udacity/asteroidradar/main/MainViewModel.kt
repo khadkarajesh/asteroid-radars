@@ -35,10 +35,10 @@ class MainViewModel(
         viewModelScope.launch {
             val pictureOfDayDeferred = api.getPictureOfDayAsync(BuildConfig.API_KEY)
             try {
-                var result = pictureOfDayDeferred.await()
+                var result = pictureOfDayDeferred
                 pictureOfDay.value = result
             } catch (e: Exception) {
-                Log.d(tag, e.localizedMessage)
+                showErrorMessage.value = e.localizedMessage
             }
         }
     }
@@ -68,7 +68,8 @@ class MainViewModel(
                     asteroids.value = dataList
                 }
 
-                is Result.Error -> showSnackBar.value = result.message
+                is Result.Error ->
+                    showSnackBar.value = result.message
             }
         }
         invalidateShowNoData()

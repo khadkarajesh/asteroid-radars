@@ -3,7 +3,6 @@ package com.udacity.asteroidradar.data.local
 import android.util.Log
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.BuildConfig
-import com.udacity.asteroidradar.Constants.API_QUERY_DATE_FORMAT
 import com.udacity.asteroidradar.api.parseAsteroidsJsonResult
 import com.udacity.asteroidradar.data.AsteroidDataSource
 import com.udacity.asteroidradar.data.dto.AsteroidDTO
@@ -14,7 +13,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
-import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -69,7 +67,7 @@ class AsteroidsLocalRepository(
     }
 
     private suspend fun getRemoteAsteroids(): List<Asteroid> {
-        val responseBody = service.getAsteroidsAsync(BuildConfig.API_KEY, today()).await()
+        val responseBody = service.getAsteroidsAsync(BuildConfig.API_KEY, today())
         val jsonObject = JSONObject(responseBody.string())
         return parseAsteroidsJsonResult(jsonObject)
     }
