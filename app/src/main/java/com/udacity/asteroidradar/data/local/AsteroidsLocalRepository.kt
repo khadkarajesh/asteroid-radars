@@ -82,7 +82,7 @@ class AsteroidsLocalRepository(
             if (asteroid != null) {
                 return@withContext Result.Success(asteroid)
             } else {
-                return@withContext Result.Error("Asteroid.kt not found!")
+                return@withContext Result.Error("Asteroid not found")
             }
         } catch (exception: Exception) {
             Result.Error(exception.localizedMessage)

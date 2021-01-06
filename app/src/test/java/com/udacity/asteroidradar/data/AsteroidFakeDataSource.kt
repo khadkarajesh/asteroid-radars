@@ -1,8 +1,5 @@
 package com.udacity.asteroidradar.data
 
-import android.app.Application
-import androidx.test.core.app.ApplicationProvider
-import com.udacity.asteroidradar.R
 import com.udacity.asteroidradar.data.dto.AsteroidDTO
 import com.udacity.asteroidradar.data.dto.Result
 import com.udacity.asteroidradar.domain.AsteroidDataItem
